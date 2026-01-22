@@ -10,13 +10,12 @@ RUN apk add --no-cache \
     libzip-dev \
     libpng-dev \
     libjpeg-turbo-dev \
-    libfreetype-dev \
     postgresql-dev \
     nodejs \
     npm
 
-# Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
+# Install PHP extensions (without freetype for Alpine compatibility)
+RUN docker-php-ext-configure gd --with-jpeg && \
     docker-php-ext-install -j$(nproc) \
     gd \
     zip \
