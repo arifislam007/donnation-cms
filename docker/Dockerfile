@@ -1,7 +1,7 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-fpm-bullseye
 
 # Install system dependencies
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     wget \
     git \
@@ -9,13 +9,15 @@ RUN apk add --no-cache \
     unzip \
     libzip-dev \
     libpng-dev \
-    libjpeg-turbo-dev \
-    postgresql-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    libpq-dev \
     nodejs \
-    npm
+    npm \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions (without freetype for Alpine compatibility)
-RUN docker-php-ext-configure gd --with-jpeg && \
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) \
     gd \
     zip \
